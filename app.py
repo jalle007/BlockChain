@@ -1,6 +1,9 @@
 from blockchain import Blockchain
 
 def main():
+    import os
+    os.system('cls' if os.name == 'nt' else 'clear')
+
     # Initialize the blockchain
     my_blockchain = Blockchain()
 
@@ -8,9 +11,7 @@ def main():
     my_blockchain.add_block("First Block Data")
     my_blockchain.add_block("Second Block Data")
 
-    import os
-    os.system('cls' if os.name == 'nt' else 'clear')
-
+    print("*** Blockchain app started ***")
     # Validate the blockchain
     print("Is blockchain valid?", my_blockchain.is_chain_valid())
 

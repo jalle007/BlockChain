@@ -43,5 +43,5 @@ class Blockchain:
                 print(f"Block {current_block.index} is not linked correctly to the previous block!")
                 return False
 
-        print("Blockchain is valid.")
+        # print("Blockchain is valid.")
         return True
