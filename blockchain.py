@@ -1,30 +1,41 @@
 from block import Block
+from transaction import Transaction
+from smart_contract import SmartContract
 
 class Blockchain:
-    # Constructor for the Blockchain class.
-    # Initializes the blockchain with the genesis block.
     def __init__(self):
         self.chain = [self.create_genesis_block()]
-        self.difficulty = 4  # Set the mining difficulty level.
+        self.difficulty = 4
+        self.pending_transactions = []
+        self.smart_contracts = []  # List of registered smart contracts.
 
-    # Creates the first block in the blockchain, called the Genesis Block.
-    # Returns a Block object with index 0 and arbitrary previous hash/data.
     def create_genesis_block(self):
         return Block(0, "0", "Genesis Block")
 
-    # Retrieves the most recent block in the chain.
-    # Returns the last block in the blockchain.
     def get_latest_block(self):
         return self.chain[-1]
 
-    # Adds a new block to the blockchain after mining it.
-    # Parameters:
-    # - new_data: The data to be stored in the new block.
-    def add_block(self, new_data):
+    def add_transaction(self, transaction):
+        self.pending_transactions.append(transaction)
+
+    def add_block(self, miner_reward):
         latest_block = self.get_latest_block()
-        new_block = Block(len(self.chain), latest_block.hash, new_data)
+        new_block = Block(len(self.chain), latest_block.hash, str(self.pending_transactions))
         new_block.mine_block(self.difficulty)
         self.chain.append(new_block)
+        self.pending_transactions = [Transaction("System", "Miner", miner_reward)]
+
+    # Registers a smart contract to be executed on the blockchain.
+    def register_smart_contract(self, contract):
+        self.smart_contracts.append(contract)
+
+    # Executes all registered smart contracts if their conditions are met.
+    def execute_smart_contracts(self):
+        for contract in self.smart_contracts:
+            executed = contract.execute(self)
+            if executed:
+                print(f"Smart Contract {contract.contract_id} executed.")
+
 
     # Validates the entire blockchain.
     # Ensures each block's hash is correct and matches the previous block's hash.
